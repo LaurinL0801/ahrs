@@ -28,3 +28,6 @@ dist/*
 doctest/*
 docs/build/
 docs/source/_build/
+
+.direnv/
+.devenv/
