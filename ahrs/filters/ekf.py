@@ -988,9 +988,7 @@ class EKF:
             "Dt", (1.0 / self.frequency) if self.frequency else 0.01
         )
         self.q0: np.ndarray = kwargs.get("q0")
-        self.P: np.ndarray = kwargs.get(
-            "P", np.identity(4)
-        )  # Initial state covariance
+        self.P: np.ndarray = kwargs.get("P", np.identity(4))  # Initial state covariance
         self.R: np.ndarray = self._set_measurement_noise_covariance(**kwargs)
         self._set_reference_frames(kwargs.get("magnetic_ref"), self.frame)
         self._assert_validity_of_inputs()
@@ -1012,18 +1010,14 @@ class EKF:
             )
         self.noises = [
             kw.get(label, value)
-            for label, value in zip(
-                ["var_gyr", "var_acc", "var_mag"], default_noises
-            )
+            for label, value in zip(["var_gyr", "var_acc", "var_mag"], default_noises)
         ]
         self.g_noise, self.a_noise, self.m_noise = self.noises
         return np.diag(np.repeat(self.noises[1:], 3))
 
     def _set_reference_frames(self, mref: float, frame: str = "NED") -> None:
         if not isinstance(frame, str):
-            raise TypeError(
-                f"Parameter 'frame' must be a string. Got {type(frame)}."
-            )
+            raise TypeError(f"Parameter 'frame' must be a string. Got {type(frame)}.")
         if frame.upper() not in ["NED", "ENU"]:
             raise ValueError(f"Invalid frame '{frame}'. Try 'NED' or 'ENU'")
         # Magnetic Reference Vector
@@ -1112,9 +1106,7 @@ class EKF:
                 )
         for item in ["P", "R"]:
             if self.__getattribute__(item).ndim != 2:
-                raise ValueError(
-                    f"Parameter '{item}' must be a 2-dimensional array."
-                )
+                raise ValueError(f"Parameter '{item}' must be a 2-dimensional array.")
             m, n = self.__getattribute__(item).shape
             if m != n:
                 raise ValueError(
@@ -1136,9 +1128,7 @@ class EKF:
 
         """
         _assert_numerical_iterable(self.gyr, "Angular velocity vector")
-        _assert_numerical_iterable(
-            self.acc, "Gravitational acceleration vector"
-        )
+        _assert_numerical_iterable(self.acc, "Gravitational acceleration vector")
         self.gyr = np.array(self.gyr)
         self.acc = np.array(self.acc)
         if self.acc.shape != self.gyr.shape:
@@ -1162,9 +1152,7 @@ class EKF:
             Q[0] /= np.linalg.norm(Q[0])
             # EKF Loop over all data
             for t in range(1, num_samples):
-                Q[t] = self.update(
-                    Q[t - 1], self.gyr[t], self.acc[t], self.mag[t]
-                )
+                Q[t] = self.update(Q[t - 1], self.gyr[t], self.acc[t], self.mag[t])
             return Q
         ###### Compute attitude with IMU architecture ######
         if self.q0 is None:
@@ -1378,9 +1366,7 @@ class EKF:
             Jacobian of observations.
         """
         if mode.lower() not in ["normal", "refactored"]:
-            raise ValueError(
-                f"Mode '{mode}' is invalid. Try 'normal' or 'refactored'."
-            )
+            raise ValueError(f"Mode '{mode}' is invalid. Try 'normal' or 'refactored'.")
         qw, qx, qy, qz = q
         if mode.lower() == "refactored":
             t = skew(self.a_ref) @ q[1:]
