@@ -18,6 +18,7 @@
         just
         just-formatter
         just-lsp
+        python313Packages.black
       ];
     };
   };

@@ -23,11 +23,12 @@ dist/*
 .vscode
 .env
 .venv
+.direnv/
+.devenv/
 
 # Documentation
 doctest/*
 docs/build/
 docs/source/_build/
 
-.direnv/
-.devenv/
+uv.lock
